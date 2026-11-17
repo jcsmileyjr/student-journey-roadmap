@@ -10,6 +10,7 @@
   --gray-line: #C5CBD3;      /* outlines for upcoming steps */
   --chip-bg: #E8EDF4;        /* light navy tint for skill chips */
   --text-muted: #3A4B63;     /* body text on white, passes contrast */
+  --teal: #137C8B;           /* accent: links and Paths chips (white bg 4.9:1) */
 }
 
 * { box-sizing: border-box; }
@@ -249,7 +250,7 @@ body {
 .substep-note { display: block; font-size: 0.9rem; }
 
 /* example link */
-.example-link { color: var(--navy); font-weight: 600; }
+.example-link { color: var(--teal); font-weight: 600; text-decoration: underline; }
 .example-link:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 
 /* PHASE BLOCK: quiet, non-interactive */
@@ -272,7 +273,7 @@ body {
 .phase-block .chips li { background: var(--white); }
 .phase-block .chips--paths li {
   background: transparent;
-  border: 1.5px solid var(--navy);
+  border: 2px solid var(--teal);   /* teal border, navy text keeps contrast on the tint */
 }
 .phase-label {
   margin: 0.25rem 0 0.15rem;
