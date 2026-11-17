@@ -98,7 +98,8 @@ function renderJourney() {
     // PHASE BLOCK: after the last step of each phase
     journeyPhases.forEach(function (phase) {
       if (phase.stepIds[1] !== step.id) return;
-      html += '<li class="phase-block"><h2>Where this leads</h2><p>' + phase.leadsTo + "</p>";
+      html += '<li class="phase-block"><span class="phase-name">' + phase.name + " phase</span>" +
+              "<h2>Where this leads</h2><p>" + phase.leadsTo + "</p>";
       if (phase.roles.length > 0) {
         html += buildChips(phase.roles);
       }

@@ -10,6 +10,7 @@
   --gray-line: #C5CBD3;      /* outlines for upcoming steps */
   --chip-bg: #E8EDF4;        /* light navy tint for skill chips */
   --text-muted: #3A4B63;     /* body text on white, passes contrast */
+  --step-gap: 1.25rem;       /* space between timeline items */
   --teal: #137C8B;           /* accent: links and Paths chips (white bg 4.9:1) */
 }
 
@@ -20,24 +21,33 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--navy);
   background: var(--white);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 /* ---------- HEADER BANNER ---------- */
 .banner {
-  background: var(--navy);
+  /* navy gradient with a faint dotted grid on top (decorative only) */
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.10) 1px, transparent 1.5px) 0 0 / 18px 18px,
+    linear-gradient(135deg, #0B2545 0%, #13396b 100%);
   color: var(--white);
-  padding: 2rem 1.25rem;
+  padding: 3rem 1.25rem 3.25rem;
   text-align: center;
 }
-.banner h1 { margin: 0 0 0.25rem; font-size: 1.75rem; }
-.banner p  { margin: 0; font-size: 1rem; }
+.banner h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.banner p  { margin: 0 auto; max-width: 28rem; font-size: 1.1rem; opacity: 0.92; }
 
 /* ---------- CONTAINER ---------- */
 .container {
   max-width: 40rem;          /* centered, never switches to columns */
   margin: 0 auto;
-  padding: 1.5rem 1rem 3rem;
+  padding: 2rem 1rem 3.5rem;
 }
 
 /* ---------- TIMELINE ---------- */
@@ -65,7 +75,7 @@ body {
   display: flex;
   gap: 0.875rem;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: var(--step-gap);
 }
 
 /* ---------- MARKER (numbered circle) ---------- */
@@ -88,6 +98,12 @@ body {
   background: var(--white);
   border: 2px solid var(--gray-line);
   border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(11, 37, 69, 0.08), 0 4px 10px rgba(11, 37, 69, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(11, 37, 69, 0.14);
 }
 
 .card-toggle {
@@ -96,11 +112,12 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.875rem 1rem;
+  padding: 1rem 1.1rem;
   background: none;
   border: 0;
   font: inherit;
   font-weight: 600;
+  font-size: 1.05rem;
   color: var(--navy);
   text-align: left;
   cursor: pointer;
@@ -195,7 +212,7 @@ body {
   color: var(--white);
 }
 .step--completed .card { border-color: var(--navy); }
-.card--open { box-shadow: 0 4px 12px rgba(11, 37, 69, 0.12); }
+.card--open { box-shadow: 0 8px 20px rgba(11, 37, 69, 0.16); }
 
 /* current: gold marker, navy text */
 .step--current .marker {
@@ -256,11 +273,24 @@ body {
 /* PHASE BLOCK: quiet, non-interactive */
 .phase-block {
   position: relative;
-  margin: 0 0 1rem 3.375rem;       /* aligns with the cards (2.5rem marker + gap) */
-  padding: 0.875rem 1rem;
+  margin: 0 0 var(--step-gap) 3.375rem;   /* aligns with the cards (2.5rem marker + gap) */
+  padding: 1rem 1.1rem 1rem 1.25rem;
   background: var(--chip-bg);
   color: var(--navy);
   border-radius: 0.75rem;
+  border-left: 6px solid var(--teal);     /* accent edge so phases read as chapters */
+}
+.phase-name {
+  display: inline-block;
+  margin-bottom: 0.4rem;
+  padding: 0.1rem 0.6rem;
+  background: var(--teal);
+  color: var(--white);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
 }
 .phase-block h2 {
   margin: 0 0 0.25rem;
@@ -293,6 +323,7 @@ body {
 
 @media (max-width: 400px) {
   .phase-block { margin-left: 0; }
+  .phase-block::before { display: none; }
 }
 
 /* CURRENT-STEP PICKER */
@@ -315,3 +346,49 @@ body {
 }
 .step-picker select:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 .step-picker-hint { margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--text-muted); }
+
+/* ============================================================
+   TWO-TONE TIMELINE LINE
+   The gray line (.timeline::before) is the base. Navy segments
+   are drawn on top for the stretch the student has completed.
+   Each step draws two pieces: the gap above its marker (::before)
+   and the stretch below it (::after).
+   ============================================================ */
+.step::before,
+.step::after,
+.phase-block::before {
+  content: "";
+  position: absolute;
+  left: 1.25rem;
+  width: 3px;
+  transform: translateX(-50%);
+  background: transparent;
+}
+/* above the marker: from the previous item down to this marker's center */
+.step::before {
+  top: calc(-1 * var(--step-gap));
+  height: calc(var(--step-gap) + 1.25rem);
+}
+/* below the marker: from this marker's center to the bottom of the step */
+.step::after {
+  top: 1.25rem;
+  bottom: 0;
+}
+.step:first-child::before { display: none; }
+
+.step--completed::before,
+.step--current::before,
+.step--completed::after { background: var(--navy); }
+
+/* phase blocks sit in the line's path (they are indented, so reach left) */
+.phase-block::before {
+  left: calc(-2.125rem - 6px);   /* minus the 6px left border, which shifts the origin */
+  top: calc(-1 * var(--step-gap));
+  bottom: 0;
+}
+.step--completed + .phase-block::before { background: var(--navy); }
+
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+  .card:hover { transform: none; }
+}
