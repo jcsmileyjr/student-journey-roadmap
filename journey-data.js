@@ -1,6 +1,6 @@
 // ============================================================
 // STUDENT JOURNEY ROADMAP — DATA LAYER (v2: adds roles + phases)
-// 14 steps from first presentation to capstone.
+// 16 steps from first presentation to capstone.
 // Mirrors the Shark Tank Showcase pattern: one array of objects,
 // state variables, one render function.
 // ============================================================
@@ -9,12 +9,12 @@
 // currentStepId  = PROGRESS state. Instructor sets it per cohort. Never changes on click.
 // expandedStepId = NAVIGATION state. Which card is open. Starts on the current step
 //                  so the page opens on "you are here". null means all cards closed.
-let currentStepId = 9;
+let currentStepId = 11;
 let expandedStepId = currentStepId;
 
 // DATA: STEPS
 // Field guide:
-//   id           number   position in the journey (1-14)
+//   id           number   position in the journey (1-16)
 //   title        string   short card heading
 //   phase        string   must match a phase id in journeyPhases below
 //   optional     boolean  true = optional track (no one is "behind" for skipping it)
@@ -89,6 +89,30 @@ const journeySteps = [
   },
   {
     id: 6,
+    title: "AI Logo and Image Generation",
+    phase: "brand",
+    optional: false,
+    artifact: "A set of logo and image concepts for your hustle idea, made with AI image tools",
+    whyItMatters: "Your hustle idea from step 2 gets a look, and you learn to direct AI tools toward what you want.",
+    skills: ["AI image generation", "Writing image prompts", "Comparing and choosing options"],
+    roles: ["Content Creator"],
+    subSteps: [],
+    exampleWork: null
+  },
+  {
+    id: 7,
+    title: "Brand Refinement in Canva",
+    phase: "brand",
+    optional: false,
+    artifact: "A refined logo and a brand color palette for your hustle idea",
+    whyItMatters: "Consistent colors and a clean logo make your hustle look like a real business on every page you build next.",
+    skills: ["Canva basics", "Logo refinement", "Choosing brand colors"],
+    roles: ["Content Creator"],
+    subSteps: [],
+    exampleWork: null
+  },
+  {
+    id: 8,
     title: "Digital Business Card",
     phase: "build",
     optional: false,
@@ -100,7 +124,7 @@ const journeySteps = [
     exampleWork: null
   },
   {
-    id: 7,
+    id: 9,
     title: "Single-Page Hustle Website",
     phase: "build",
     optional: false,
@@ -112,7 +136,7 @@ const journeySteps = [
     exampleWork: null
   },
   {
-    id: 8,
+    id: 10,
     title: "Multi-Page Website with a Form",
     phase: "build",
     optional: false,
@@ -124,7 +148,7 @@ const journeySteps = [
     exampleWork: null
   },
   {
-    id: 9,
+    id: 11,
     title: "AI Hackathon Project",
     phase: "build",
     optional: true,
@@ -136,7 +160,7 @@ const journeySteps = [
     exampleWork: null
   },
   {
-    id: 10,
+    id: 12,
     title: "Site Features Powered by Supabase",
     phase: "build",
     optional: false,
@@ -147,17 +171,17 @@ const journeySteps = [
     // Smaller milestones so students get frequent wins during the steepest climb.
     subSteps: [
       {
-        id: "10a",
+        id: "12a",
         title: "Connect to Supabase and read one row",
         note: "Suggested warm-up so the first win comes quickly."
       },
       {
-        id: "10b",
+        id: "12b",
         title: "Data-focused feature",
         note: "Display data from Supabase on your site."
       },
       {
-        id: "10c",
+        id: "12c",
         title: "Interactive feature",
         note: "Let visitors do something that changes the data."
       }
@@ -165,7 +189,7 @@ const journeySteps = [
     exampleWork: null
   },
   {
-    id: 11,
+    id: 13,
     title: "Resume",
     phase: "career",
     optional: false,
@@ -177,7 +201,7 @@ const journeySteps = [
     exampleWork: null
   },
   {
-    id: 12,
+    id: 14,
     title: "LinkedIn Profile",
     phase: "career",
     optional: false,
@@ -189,7 +213,7 @@ const journeySteps = [
     exampleWork: null
   },
   {
-    id: 13,
+    id: 15,
     title: "Capstone: Polish Your Website",
     phase: "finish",
     optional: false,
@@ -201,7 +225,7 @@ const journeySteps = [
     exampleWork: null
   },
   {
-    id: 14,
+    id: 16,
     title: "Google AI Essentials Certification",
     phase: "finish",
     optional: false,
@@ -241,9 +265,17 @@ const journeyPhases = [
     leadsTo: "AI credentials give you something to point to when you help small businesses get started with AI tools."
   },
   {
+    id: "brand",
+    name: "Brand",
+    stepIds: [6, 7],
+    roles: ["Content Creator"],
+    paths: ["Entrepreneur"],
+    leadsTo: "A logo and brand colors are the visual identity behind a side hustle, and the base for content and marketing work."
+  },
+  {
     id: "build",
     name: "Build",
-    stepIds: [6, 10],
+    stepIds: [8, 12],
     roles: ["Digital Marketing Assistant", "Content Creator", "Freelance Site Builder", "QA Tester (entry-level)"],
     paths: [],
     leadsTo: "Your sites and features are the proof for roles that create, run, and test websites."
@@ -251,7 +283,7 @@ const journeyPhases = [
   {
     id: "career",
     name: "Career",
-    stepIds: [11, 12],
+    stepIds: [13, 14],
     roles: [],
     paths: ["Freelancer"],
     leadsTo: "Your resume and LinkedIn profile are how employers or freelance clients find you and see what you can do."
@@ -259,7 +291,7 @@ const journeyPhases = [
   {
     id: "finish",
     name: "Finish",
-    stepIds: [13, 14],
+    stepIds: [15, 16],
     roles: ["Junior Web Developer", "Project Assistant / Coordinator", "Administrative Professional"],
     paths: [],
     leadsTo: "A finished capstone and a closing credential show you can plan, build, and deliver a project from start to finish."
