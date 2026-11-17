@@ -392,3 +392,42 @@ body {
   .card { transition: none; }
   .card:hover { transform: none; }
 }
+
+/* ============================================================
+   PHASE 2: ICONS AND IMAGERY
+   ============================================================ */
+
+/* hero road graphic in the banner */
+.banner-road {
+  display: block;
+  width: min(20rem, 80%);
+  height: auto;
+  margin: 1.25rem auto 0;
+}
+
+/* small icon bubble before each step title */
+.step-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  background: var(--chip-bg);
+  border-radius: 50%;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* brand color swatch strip inside the Brand phase block */
+.swatches {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.swatches span {
+  flex: 1;
+  height: 1.75rem;
+  max-width: 4rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(11, 37, 69, 0.2);
+}

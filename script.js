@@ -20,6 +20,51 @@ function buildChips(items, extraClass) {
   return '<ul class="chips ' + (extraClass || "") + '">' + listItems + "</ul>";
 }
 
+// ------------------------------------------------------------
+// ICONS (decorative emoji, hidden from screen readers)
+// Presentation only, so they live here and not in journey-data.js.
+// stepIcons is keyed by step id: update it if steps are added or renumbered.
+// A step with no entry falls back to its phase icon.
+// ------------------------------------------------------------
+const phaseIcons = {
+  present: "🎤",        // microphone
+  credential: "🏆",     // trophy
+  brand: "🎨",          // palette
+  build: "🛠️",    // tools
+  career: "💼",         // briefcase
+  finish: "🏁"          // checkered flag
+};
+
+const stepIcons = {
+  1: "📊",   // chart (slides)
+  2: "🦈",   // shark
+  3: "🎓",   // graduation cap
+  4: "💻",   // laptop
+  5: "🧠",   // brain
+  6: "🤖",   // robot
+  7: "🎨",   // palette
+  8: "📇",   // card index
+  9: "🌐",   // globe
+  10: "📝",  // memo
+  11: "🚀",  // rocket
+  12: "🗄️", // file cabinet (database)
+  13: "📄",  // page
+  14: "🔗",  // link
+  15: "✨",        // sparkles
+  16: "🏅"   // medal
+};
+
+function getStepIcon(step) {
+  return stepIcons[step.id] || phaseIcons[step.phase] || "";
+}
+
+// Brand phase decoration: a strip of color swatches (decorative placeholder)
+const brandSwatchStrip =
+  '<div class="swatches" aria-hidden="true">' +
+    '<span style="background:#0B2545"></span><span style="background:#137C8B"></span>' +
+    '<span style="background:#C9A227"></span><span style="background:#E8EDF4"></span>' +
+  "</div>";
+
 // Status is COMPUTED from progress state, never stored on the step.
 function getStatus(step) {
   if (step.id < currentStepId) return "completed";
@@ -85,6 +130,7 @@ function renderJourney() {
                   'aria-expanded="' + isOpen + '" aria-controls="' + panelId + '">' +
             '<span class="card-title">' +
               '<span class="visually-hidden">' + statusText[status] + ": </span>" +
+              '<span class="step-icon" aria-hidden="true">' + getStepIcon(step) + "</span>" +
               step.title + optionalTag + hereTag +
             "</span>" +
             '<span class="chevron" aria-hidden="true"></span>' +
@@ -98,13 +144,17 @@ function renderJourney() {
     // PHASE BLOCK: after the last step of each phase
     journeyPhases.forEach(function (phase) {
       if (phase.stepIds[1] !== step.id) return;
-      html += '<li class="phase-block"><span class="phase-name">' + phase.name + " phase</span>" +
+      html += '<li class="phase-block"><span class="phase-name"><span aria-hidden="true">' +
+              (phaseIcons[phase.id] || "") + "</span> " + phase.name + " phase</span>" +
               "<h2>Where this leads</h2><p>" + phase.leadsTo + "</p>";
       if (phase.roles.length > 0) {
         html += buildChips(phase.roles);
       }
       if (phase.paths.length > 0) {
         html += '<p class="phase-label">Paths</p>' + buildChips(phase.paths, "chips--paths");
+      }
+      if (phase.id === "brand") {
+        html += brandSwatchStrip;
       }
       html += "</li>";
     });
