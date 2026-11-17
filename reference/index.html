@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Journey — Step 8 Example</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER BANNER -->
+  <header class="banner">
+    <h1>Your Journey</h1>
+    <p>24 weeks, 14 steps. Every step builds something you can show.</p>
+  </header>
+
+  <main class="container">
+    <!-- STATIC MOCKUP: four cards show each status.
+         Step 8 is the expanded one. In the real build, JavaScript
+         will generate these from the journeySteps array. -->
+    <ol class="timeline">
+
+      <!-- Step 7: completed, collapsed -->
+      <li class="step step--completed">
+        <span class="marker" aria-hidden="true">&#10003;</span>
+        <div class="card">
+          <button class="card-toggle" aria-expanded="false" aria-controls="panel-7">
+            <span class="card-title">Single-Page Hustle Website</span>
+            <span class="chevron" aria-hidden="true"></span>
+          </button>
+        </div>
+      </li>
+
+      <!-- Step 8: completed, EXPANDED (the example) -->
+      <li class="step step--completed">
+        <span class="marker" aria-hidden="true">&#10003;</span>
+        <div class="card card--open">
+          <button class="card-toggle" aria-expanded="true" aria-controls="panel-8">
+            <span class="card-title">Multi-Page Website with a Form</span>
+            <span class="chevron" aria-hidden="true"></span>
+          </button>
+          <div class="card-panel" id="panel-8">
+            <dl>
+              <dt>What you make</dt>
+              <dd>Your site expanded with About and Contact pages, including a form with validation.</dd>
+
+              <dt>Why it matters</dt>
+              <dd>Real sites have more than one page, and real forms check what people type.</dd>
+
+              <dt>Skills you practice</dt>
+              <dd>
+                <ul class="chips">
+                  <li>Multi-page navigation</li>
+                  <li>Form handling</li>
+                  <li>Input validation</li>
+                  <li>JavaScript events</li>
+                </ul>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </li>
+
+      <!-- Step 9: current, collapsed, optional -->
+      <li class="step step--current">
+        <span class="marker" aria-hidden="true">9</span>
+        <div class="card">
+          <button class="card-toggle" aria-expanded="false" aria-controls="panel-9">
+            <span class="card-title">
+              AI Hackathon Project
+              <span class="tag tag--optional">Optional</span>
+              <span class="tag tag--here">You are here</span>
+            </span>
+            <span class="chevron" aria-hidden="true"></span>
+          </button>
+        </div>
+      </li>
+
+      <!-- Step 10: upcoming, collapsed -->
+      <li class="step step--upcoming">
+        <span class="marker" aria-hidden="true">10</span>
+        <div class="card">
+          <button class="card-toggle" aria-expanded="false" aria-controls="panel-10">
+            <span class="card-title">Site Features Powered by Supabase</span>
+            <span class="chevron" aria-hidden="true"></span>
+          </button>
+        </div>
+      </li>
+
+    </ol>
+  </main>
+
+</body>
+</html>

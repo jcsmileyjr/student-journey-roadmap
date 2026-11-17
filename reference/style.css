@@ -1,0 +1,220 @@
+/* ============================================================
+   YOUR JOURNEY — STYLES (Step 8 example)
+   Mobile-first, one layout at every screen size.
+   ============================================================ */
+
+:root {
+  --navy: #0B2545;
+  --gold: #C9A227;
+  --white: #FFFFFF;
+  --gray-line: #C5CBD3;      /* outlines for upcoming steps */
+  --chip-bg: #E8EDF4;        /* light navy tint for skill chips */
+  --text-muted: #3A4B63;     /* body text on white, passes contrast */
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--navy);
+  background: var(--white);
+  line-height: 1.5;
+}
+
+/* ---------- HEADER BANNER ---------- */
+.banner {
+  background: var(--navy);
+  color: var(--white);
+  padding: 2rem 1.25rem;
+  text-align: center;
+}
+.banner h1 { margin: 0 0 0.25rem; font-size: 1.75rem; }
+.banner p  { margin: 0; font-size: 1rem; }
+
+/* ---------- CONTAINER ---------- */
+.container {
+  max-width: 40rem;          /* centered, never switches to columns */
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+/* ---------- TIMELINE ---------- */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* the vertical connecting line */
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 1.25rem;             /* centered on the 2.5rem markers */
+  top: 1rem;
+  bottom: 1rem;
+  width: 3px;
+  background: var(--gray-line);
+  transform: translateX(-50%);
+}
+
+.step {
+  position: relative;
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+/* ---------- MARKER (numbered circle) ---------- */
+.marker {
+  flex: 0 0 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  position: relative;        /* sits above the line */
+  z-index: 1;
+}
+
+/* ---------- CARD ---------- */
+.card {
+  flex: 1;
+  min-width: 0;
+  background: var(--white);
+  border: 2px solid var(--gray-line);
+  border-radius: 0.75rem;
+}
+
+.card-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--navy);
+  text-align: left;
+  cursor: pointer;
+  border-radius: 0.6rem;
+}
+
+.card-toggle:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.card-title { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+
+/* chevron drawn with borders, rotates when open */
+.chevron {
+  flex: 0 0 auto;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-right: 2px solid var(--navy);
+  border-bottom: 2px solid var(--navy);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.card-toggle[aria-expanded="true"] .chevron { transform: rotate(-135deg); }
+
+/* ---------- EXPANDED PANEL ---------- */
+.card-panel {
+  padding: 0 1rem 1rem;
+  border-top: 1px solid var(--gray-line);
+  margin: 0 1rem;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.card-panel dl { margin: 0.75rem 0 0; }
+.card-panel dt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--navy);
+  margin-top: 0.75rem;
+}
+.card-panel dd {
+  margin: 0.15rem 0 0;
+  color: var(--text-muted);
+}
+
+/* skill chips */
+.chips {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.chips li {
+  background: var(--chip-bg);
+  color: var(--navy);
+  font-size: 0.85rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+}
+
+/* ---------- TAGS ---------- */
+.tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tag--optional {
+  background: var(--white);
+  color: var(--navy);
+  border: 1.5px solid var(--navy);
+}
+.tag--here {
+  background: var(--gold);
+  color: var(--navy);        /* navy on gold, never white */
+}
+
+/* ============================================================
+   STATUS STYLES
+   ============================================================ */
+
+/* completed: solid navy marker, white check */
+.step--completed .marker {
+  background: var(--navy);
+  color: var(--white);
+}
+.step--completed .card { border-color: var(--navy); }
+.card--open { box-shadow: 0 4px 12px rgba(11, 37, 69, 0.12); }
+
+/* current: gold marker, navy text */
+.step--current .marker {
+  background: var(--gold);
+  color: var(--navy);
+}
+.step--current .card {
+  border-color: var(--gold);
+  border-width: 3px;
+}
+
+/* upcoming: outlined marker, quieter card */
+.step--upcoming .marker {
+  background: var(--white);
+  color: var(--navy);
+  border: 2px solid var(--gray-line);
+}
+.step--upcoming .card { border-color: var(--gray-line); }
+
+/* respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  .chevron { transition: none; }
+}

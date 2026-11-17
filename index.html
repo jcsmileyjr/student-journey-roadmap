@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Journey</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER BANNER -->
+  <header class="banner">
+    <h1>Your Journey</h1>
+    <p>24 weeks, 14 steps. Every step builds something you can show.</p>
+  </header>
+
+  <main class="container">
+    <!-- The render function (script.js) fills this list from the data. -->
+    <ol class="timeline" id="timeline"></ol>
+    <p class="roles-note" id="roles-note"></p>
+  </main>
+
+  <!-- Order matters: data first, then the code that uses it. -->
+  <script src="journey-data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
