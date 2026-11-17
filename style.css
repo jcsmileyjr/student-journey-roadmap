@@ -494,3 +494,48 @@ body {
 }
 .jump-button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 .container { padding-bottom: 5rem; }
+
+/* ============================================================
+   PHASE 4: MOTION
+   Each effect has a reduced-motion fallback at the bottom.
+   ============================================================ */
+
+/* scroll-reveal: script.js adds .reveal on first render, then
+   .reveal--visible when the item scrolls into view */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal--visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* panels ease in when they are rendered open (closing is instant,
+   because a re-render replaces the old card) */
+.card-panel:not([hidden]) {
+  animation: panel-open 0.2s ease-out;
+}
+@keyframes panel-open {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* soft gold pulse on the "you are here" marker */
+.step--current .marker {
+  animation: marker-glow 2.4s ease-in-out infinite;
+}
+@keyframes marker-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.55); }
+  50%      { box-shadow: 0 0 0 9px rgba(201, 162, 39, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .card-panel:not([hidden]) { animation: none; }
+  .step--current .marker {
+    animation: none;
+    box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.35);   /* still glows, but static */
+  }
+}

@@ -87,6 +87,34 @@ const statusText = {
 };
 
 // ------------------------------------------------------------
+// PHASE 4: MOTION (all of it off when the user prefers reduced motion)
+// Scroll-reveal: cards fade up as they enter the screen. It only runs on
+// the first render, because every click re-renders the whole timeline and
+// we do not want everything to fade in again each time.
+// Concept: IntersectionObserver reports when an element becomes visible.
+// ------------------------------------------------------------
+const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+let revealOnNextRender = !reducedMotionQuery.matches && "IntersectionObserver" in window;
+
+function startScrollReveal() {
+  if (!revealOnNextRender) return;
+  revealOnNextRender = false;   // later renders skip the effect
+
+  const revealObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("reveal--visible");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  timelineElement.querySelectorAll(".reveal").forEach(function (element) {
+    revealObserver.observe(element);
+  });
+}
+
+// ------------------------------------------------------------
 // PIECE 3: RENDER FUNCTION
 // Builds the whole timeline from the data + the two state variables.
 // Runs on page load AND after every click.
@@ -94,6 +122,8 @@ const statusText = {
 // ------------------------------------------------------------
 function renderJourney() {
   let html = "";
+  // Scroll-reveal class: only on the very first render (see PHASE 4 motion below)
+  const revealClass = revealOnNextRender ? " reveal" : "";
 
   journeySteps.forEach(function (step) {
     const status = getStatus(step);
@@ -130,7 +160,7 @@ function renderJourney() {
     }
 
     html +=
-      '<li class="step step--' + status + '">' +
+      '<li class="step step--' + status + revealClass + '">' +
         '<span class="marker" aria-hidden="true">' + markerSymbol + "</span>" +
         '<div class="card' + (isOpen ? " card--open" : "") + '"' +
             (status === "current" ? ' aria-current="step"' : "") + ">" +
@@ -152,7 +182,7 @@ function renderJourney() {
     // PHASE BLOCK: after the last step of each phase
     journeyPhases.forEach(function (phase) {
       if (phase.stepIds[1] !== step.id) return;
-      html += '<li class="phase-block"><span class="phase-name"><span aria-hidden="true">' +
+      html += '<li class="phase-block' + revealClass + '"><span class="phase-name"><span aria-hidden="true">' +
               (phaseIcons[phase.id] || "") + "</span> " + phase.name + " phase</span>" +
               "<h2>Where this leads</h2><p>" + phase.leadsTo + "</p>";
       if (phase.roles.length > 0) {
@@ -169,6 +199,7 @@ function renderJourney() {
   });
 
   timelineElement.innerHTML = html;
+  startScrollReveal();
   rolesNoteElement.textContent = rolesNote;
 
   renderProgressSummary();
