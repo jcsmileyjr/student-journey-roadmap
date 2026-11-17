@@ -10,6 +10,7 @@ const progressCountElement = document.getElementById("progress-count");
 const milestoneElement = document.getElementById("milestone");
 const expandAllButton = document.getElementById("expand-all");
 const jumpButton = document.getElementById("jump-to-current");
+const finishLineElement = document.getElementById("finish-line");
 
 // expandedStepId is normally a step id or null. This special value means
 // "every card open" (set by the Expand all button).
@@ -234,7 +235,78 @@ function renderProgressSummary() {
 
   milestoneElement.textContent = message;
   milestoneElement.hidden = message === "";
+
+  // Finish line: lights up in stages as the student gets closer (CSS reads data-level).
+  //   0 = under halfway, 1 = halfway, 2 = three quarters, 3 = on the final step
+  let finishLevel = 0;
+  if (currentStepId === lastStepId) {
+    finishLevel = 3;
+  } else if (completedCount / totalSteps >= 0.75) {
+    finishLevel = 2;
+  } else if (completedCount / totalSteps >= 0.5) {
+    finishLevel = 1;
+  }
+  finishLineElement.dataset.level = finishLevel;
 }
+
+// ------------------------------------------------------------
+// PHASE 5: CELEBRATION
+// When the step picker moves forward, the step just completed gets a
+// checkmark pop and a short confetti burst. Skipped for reduced motion.
+// Concept: creating DOM elements in code, then removing them when done.
+// ------------------------------------------------------------
+const confettiColors = ["#0B2545", "#137C8B", "#C9A227", "#E8EDF4"];
+
+function celebrateStepCompleted(completedStepId) {
+  if (reducedMotionQuery.matches) return;
+
+  // checkmark pop on the marker of the step that just became completed
+  const completedStepButton = timelineElement.querySelector('.card-toggle[data-step-id="' + completedStepId + '"]');
+  if (completedStepButton) {
+    const completedMarker = completedStepButton.closest(".step").querySelector(".marker");
+    completedMarker.classList.add("marker--pop");
+  }
+
+  // confetti: fixed-position bits that fly out from the middle of the screen
+  const burst = document.createElement("div");
+  burst.className = "confetti";
+  burst.setAttribute("aria-hidden", "true");
+  for (let pieceNumber = 0; pieceNumber < 28; pieceNumber++) {
+    const piece = document.createElement("span");
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 90 + Math.random() * 140;
+    piece.style.setProperty("--dx", Math.cos(angle) * distance + "px");
+    piece.style.setProperty("--dy", Math.sin(angle) * distance - 40 + "px");
+    piece.style.setProperty("--spin", Math.round(Math.random() * 720 - 360) + "deg");
+    piece.style.background = confettiColors[pieceNumber % confettiColors.length];
+    burst.appendChild(piece);
+  }
+  document.body.appendChild(burst);
+  setTimeout(function () { burst.remove(); }, 1400);
+}
+
+// ------------------------------------------------------------
+// PHASE 5: KEYBOARD NAVIGATION
+// With a card button focused, Up/Down arrows move to the previous/next
+// card, and Home/End jump to the first/last. Tab and Enter still work.
+// ------------------------------------------------------------
+timelineElement.addEventListener("keydown", function (event) {
+  if (!event.target.classList.contains("card-toggle")) return;
+
+  const toggleButtons = Array.from(timelineElement.querySelectorAll(".card-toggle"));
+  const position = toggleButtons.indexOf(event.target);
+  let targetPosition = null;
+
+  if (event.key === "ArrowDown") targetPosition = Math.min(position + 1, toggleButtons.length - 1);
+  if (event.key === "ArrowUp") targetPosition = Math.max(position - 1, 0);
+  if (event.key === "Home") targetPosition = 0;
+  if (event.key === "End") targetPosition = toggleButtons.length - 1;
+
+  if (targetPosition !== null) {
+    event.preventDefault();   // stop the page from scrolling on its own
+    toggleButtons[targetPosition].focus();
+  }
+});
 
 // ------------------------------------------------------------
 // PIECE 4: EVENT HANDLING (event delegation)
@@ -315,11 +387,17 @@ stepPicker.innerHTML = journeySteps.map(function (step) {
 }).join("");
 
 stepPicker.addEventListener("change", function () {
+  const previousStepId = currentStepId;
   currentStepId = Number(stepPicker.value);
   expandedStepId = currentStepId;   // open the new "you are here" card
   writeStepToUrl(currentStepId);
   renderJourney();
   scrollToCurrentStep();
+
+  // Moving forward means a step was just completed: celebrate it.
+  if (currentStepId > previousStepId) {
+    celebrateStepCompleted(currentStepId - 1);
+  }
 });
 
 // ------------------------------------------------------------

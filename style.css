@@ -539,3 +539,64 @@ body {
     box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.35);   /* still glows, but static */
   }
 }
+
+/* ============================================================
+   PHASE 5: WOW FEATURES
+   ============================================================ */
+
+/* checkmark pop on the step that was just completed */
+.marker--pop { animation: marker-pop 0.6s ease-out; }
+@keyframes marker-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+/* confetti burst: pieces fly out from the middle of the screen */
+.confetti {
+  position: fixed;
+  left: 50%;
+  top: 45%;
+  width: 0;
+  height: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+.confetti span {
+  position: absolute;
+  width: 0.55rem;
+  height: 0.8rem;
+  border-radius: 2px;
+  border: 1px solid rgba(11, 37, 69, 0.25);
+  animation: confetti-fly 1.2s ease-out forwards;
+}
+@keyframes confetti-fly {
+  0%   { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(var(--dx), calc(var(--dy) + 90px)) rotate(var(--spin)); opacity: 0; }
+}
+
+/* finish line trophy: dim at first, lights up in stages */
+.finish-line {
+  margin: 0.5rem 0 0;
+  text-align: center;
+  color: var(--navy);
+}
+.finish-line svg {
+  width: 4.5rem;
+  height: auto;
+  transition: filter 0.6s ease, opacity 0.6s ease;
+}
+.finish-line p { margin: 0.25rem 0 0; font-weight: 700; font-size: 0.9rem; }
+.finish-line[data-level="0"] svg { filter: grayscale(1); opacity: 0.35; }
+.finish-line[data-level="1"] svg { filter: grayscale(0.6); opacity: 0.55; }
+.finish-line[data-level="2"] svg { filter: grayscale(0); opacity: 0.85; }
+.finish-line[data-level="3"] svg {
+  filter: drop-shadow(0 0 10px rgba(201, 162, 39, 0.9));
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marker--pop { animation: none; }
+  .confetti { display: none; }
+  .finish-line svg { transition: none; }
+}

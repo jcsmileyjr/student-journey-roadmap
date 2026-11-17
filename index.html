@@ -33,6 +33,18 @@
     </div>
 
     <ol class="timeline" id="timeline"></ol>
+
+    <!-- Finish line: dim at first, lights up as the student gets closer (data-level set by script.js) -->
+    <div class="finish-line" id="finish-line" data-level="0">
+      <svg viewBox="0 0 64 72" aria-hidden="true" focusable="false">
+        <path d="M16 6 H48 V26 C48 36 41 42 32 42 C23 42 16 36 16 26 Z" fill="#C9A227"/>
+        <path d="M16 12 H6 C6 24 10 30 18 32" fill="none" stroke="#C9A227" stroke-width="4" stroke-linecap="round"/>
+        <path d="M48 12 H58 C58 24 54 30 46 32" fill="none" stroke="#C9A227" stroke-width="4" stroke-linecap="round"/>
+        <rect x="28" y="42" width="8" height="12" fill="#C9A227"/>
+        <rect x="18" y="54" width="28" height="8" rx="2" fill="#0B2545"/>
+      </svg>
+      <p>The finish line</p>
+    </div>
     <p class="roles-note" id="roles-note"></p>
 
     <div class="step-picker">
