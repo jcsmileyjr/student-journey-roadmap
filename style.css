@@ -293,3 +293,24 @@ body {
 @media (max-width: 400px) {
   .phase-block { margin-left: 0; }
 }
+
+/* CURRENT-STEP PICKER */
+.step-picker {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--chip-bg);
+  border-radius: 0.75rem;
+  color: var(--navy);
+}
+.step-picker label { display: block; font-weight: 700; margin-bottom: 0.4rem; }
+.step-picker select {
+  width: 100%;
+  padding: 0.5rem;
+  font: inherit;
+  color: var(--navy);
+  background: var(--white);
+  border: 2px solid var(--navy);
+  border-radius: 0.5rem;
+}
+.step-picker select:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.step-picker-hint { margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--text-muted); }

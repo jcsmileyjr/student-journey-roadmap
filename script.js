@@ -135,15 +135,65 @@ timelineElement.addEventListener("click", function (event) {
 });
 
 // ------------------------------------------------------------
-// START: first render, then scroll "you are here" to the center.
+// SCROLL HELPER: bring the "you are here" card to the center.
 // ------------------------------------------------------------
-renderJourney();
-
-const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const currentCard = timelineElement.querySelector('[aria-current="step"]');
-if (currentCard) {
-  currentCard.scrollIntoView({
-    block: "center",
-    behavior: prefersReducedMotion ? "auto" : "smooth"
-  });
+function scrollToCurrentStep() {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const currentCard = timelineElement.querySelector('[aria-current="step"]');
+  if (currentCard) {
+    currentCard.scrollIntoView({
+      block: "center",
+      behavior: prefersReducedMotion ? "auto" : "smooth"
+    });
+  }
 }
+
+// ------------------------------------------------------------
+// CURRENT-STEP PICKER (dropdown at the bottom of the page)
+// Changes PROGRESS state without editing code, and writes the choice
+// into the address bar as ?step=N so the link can be shared.
+// Concepts: reading input from the URL, a form control driving state.
+// ------------------------------------------------------------
+const stepPicker = document.getElementById("step-picker");
+
+// Read ?step=N. Accept only a whole number that matches a real step.
+function readStepFromUrl() {
+  const stepFromUrl = Number(new URLSearchParams(window.location.search).get("step"));
+  const isRealStep = journeySteps.some(function (step) { return step.id === stepFromUrl; });
+  return isRealStep ? stepFromUrl : null;
+}
+
+function writeStepToUrl(stepId) {
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set("step", stepId);
+    window.history.replaceState(null, "", url);
+  } catch (error) {
+    // Some browsers block this on local files. The dropdown still works.
+  }
+}
+
+stepPicker.innerHTML = journeySteps.map(function (step) {
+  return '<option value="' + step.id + '">' + step.id + ". " + step.title + "</option>";
+}).join("");
+
+stepPicker.addEventListener("change", function () {
+  currentStepId = Number(stepPicker.value);
+  expandedStepId = currentStepId;   // open the new "you are here" card
+  writeStepToUrl(currentStepId);
+  renderJourney();
+  scrollToCurrentStep();
+});
+
+// ------------------------------------------------------------
+// START: apply ?step=N if present, first render, scroll to "you are here".
+// ------------------------------------------------------------
+const stepFromUrl = readStepFromUrl();
+if (stepFromUrl !== null) {
+  currentStepId = stepFromUrl;
+  expandedStepId = stepFromUrl;
+}
+stepPicker.value = currentStepId;
+
+renderJourney();
+scrollToCurrentStep();
