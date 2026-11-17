@@ -6,6 +6,14 @@
 
 const timelineElement = document.getElementById("timeline");
 const rolesNoteElement = document.getElementById("roles-note");
+const progressCountElement = document.getElementById("progress-count");
+const milestoneElement = document.getElementById("milestone");
+const expandAllButton = document.getElementById("expand-all");
+const jumpButton = document.getElementById("jump-to-current");
+
+// expandedStepId is normally a step id or null. This special value means
+// "every card open" (set by the Expand all button).
+const ALL_OPEN = "all";
 
 // ------------------------------------------------------------
 // SMALL HELPERS: turn arrays into chip lists.
@@ -89,7 +97,7 @@ function renderJourney() {
 
   journeySteps.forEach(function (step) {
     const status = getStatus(step);
-    const isOpen = step.id === expandedStepId;
+    const isOpen = step.id === expandedStepId || expandedStepId === ALL_OPEN;
     const panelId = "panel-" + step.id;
 
     // Marker: checkmark for completed, number otherwise
@@ -162,6 +170,39 @@ function renderJourney() {
 
   timelineElement.innerHTML = html;
   rolesNoteElement.textContent = rolesNote;
+
+  renderProgressSummary();
+  expandAllButton.textContent = expandedStepId === ALL_OPEN ? "Collapse all" : "Expand all";
+}
+
+// ------------------------------------------------------------
+// PROGRESS SUMMARY + MILESTONE MESSAGE
+// Both are computed from currentStepId, like the step statuses.
+// The milestone text is encouragement copy; edit it freely.
+// ------------------------------------------------------------
+function renderProgressSummary() {
+  const totalSteps = journeySteps.length;
+  const completedCount = journeySteps.filter(function (step) {
+    return step.id < currentStepId;
+  }).length;
+  progressCountElement.textContent = completedCount + " of " + totalSteps + " steps done";
+
+  // The steepest climb is the step that has sub-milestones (the Supabase step).
+  const hardestStep = journeySteps.find(function (step) { return step.subSteps.length > 0; });
+  const lastStepId = journeySteps[totalSteps - 1].id;
+  const halfway = Math.ceil(totalSteps / 2);
+
+  let message = "";
+  if (hardestStep && currentStepId === hardestStep.id) {
+    message = "This is the steepest climb of the course. Start with the first small milestone and celebrate each win.";
+  } else if (currentStepId === lastStepId) {
+    message = "Final step. You are about to finish what you started.";
+  } else if (completedCount >= halfway) {
+    message = "You are past the halfway point. Look at everything you have already built.";
+  }
+
+  milestoneElement.textContent = message;
+  milestoneElement.hidden = message === "";
 }
 
 // ------------------------------------------------------------
@@ -176,7 +217,11 @@ timelineElement.addEventListener("click", function (event) {
   if (!toggleButton) return;
 
   const clickedStepId = Number(toggleButton.dataset.stepId);
-  expandedStepId = clickedStepId === expandedStepId ? null : clickedStepId;
+  if (expandedStepId === ALL_OPEN) {
+    expandedStepId = clickedStepId;   // from "all open", keep just the clicked card open
+  } else {
+    expandedStepId = clickedStepId === expandedStepId ? null : clickedStepId;
+  }
 
   renderJourney();
 
@@ -198,6 +243,16 @@ function scrollToCurrentStep() {
     });
   }
 }
+
+// ------------------------------------------------------------
+// TOOLBAR BUTTONS: Expand/Collapse all, and Jump to "you are here"
+// ------------------------------------------------------------
+expandAllButton.addEventListener("click", function () {
+  expandedStepId = expandedStepId === ALL_OPEN ? null : ALL_OPEN;
+  renderJourney();
+});
+
+jumpButton.addEventListener("click", scrollToCurrentStep);
 
 // ------------------------------------------------------------
 // CURRENT-STEP PICKER (dropdown at the bottom of the page)

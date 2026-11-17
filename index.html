@@ -12,6 +12,7 @@
   <header class="banner">
     <h1>Your Journey</h1>
     <p>24 weeks, 16 steps. Every step builds something you can show.</p>
+    <p class="progress-count" id="progress-count"></p>
     <!-- Decorative road to the finish flag -->
     <svg class="banner-road" viewBox="0 0 320 64" aria-hidden="true" focusable="false">
       <path d="M8 50 C70 6 112 62 172 32 S268 8 296 38" fill="none" stroke="rgba(255,255,255,0.55)"
@@ -24,6 +25,13 @@
 
   <main class="container">
     <!-- The render function (script.js) fills this list from the data. -->
+    <!-- Encouragement line, filled in by script.js (hidden when empty) -->
+    <p class="milestone" id="milestone" role="status" hidden></p>
+
+    <div class="toolbar">
+      <button type="button" class="toolbar-button" id="expand-all">Expand all</button>
+    </div>
+
     <ol class="timeline" id="timeline"></ol>
     <p class="roles-note" id="roles-note"></p>
 
@@ -33,6 +41,9 @@
       <p class="step-picker-hint">Your choice is saved in this page's link, so you can copy and share it.</p>
     </div>
   </main>
+
+  <!-- Floating shortcut back to the current step -->
+  <button type="button" class="jump-button" id="jump-to-current">Jump to &ldquo;You are here&rdquo;</button>
 
   <!-- Order matters: data first, then the code that uses it. -->
   <script src="journey-data.js"></script>

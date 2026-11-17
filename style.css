@@ -431,3 +431,66 @@ body {
   border-radius: 0.4rem;
   border: 1px solid rgba(11, 37, 69, 0.2);
 }
+
+/* ============================================================
+   PHASE 3: MOTIVATION AND ORIENTATION
+   ============================================================ */
+
+/* "X of 16 steps done" in the banner */
+.banner .progress-count {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.25rem 0.9rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* milestone message above the timeline */
+.milestone {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  background: #D6EEF0;
+  color: var(--navy);
+  border-left: 6px solid var(--teal);
+  border-radius: 0.6rem;
+  font-weight: 600;
+}
+.milestone[hidden] { display: none; }
+
+/* Expand all / Collapse all */
+.toolbar { display: flex; justify-content: flex-end; margin-bottom: 0.75rem; }
+.toolbar-button {
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+  color: var(--navy);
+  background: var(--white);
+  border: 2px solid var(--navy);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.toolbar-button:hover { background: var(--chip-bg); }
+.toolbar-button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+/* floating "Jump to You are here" */
+.jump-button {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 10;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.6rem 1rem;
+  color: var(--white);           /* white on navy */
+  background: var(--navy);
+  border: 2px solid var(--navy);
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(11, 37, 69, 0.3);
+  cursor: pointer;
+}
+.jump-button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.container { padding-bottom: 5rem; }
